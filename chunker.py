@@ -97,7 +97,91 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+    chunk_size = config.CHUNK_SIZE
+    overlap = config.CHUNK_OVERLAP
+    if overlap >= chunk_size:
+        raise ValueError("overlap has to be smaller than chunk_size")
+
+    chunks: list[Chunk] = []
+    for doc in documents:
+        lines = doc.text.splitlines()
+        title = next((line.strip() for line in lines if line.startswith("# ")), "")
+        sections: list[tuple[str, str]] = []
+        current_heading = title
+        current_lines: list[str] = []
+
+        for line in lines:
+            if line.startswith("## "):
+                if current_lines:
+                    sections.append((current_heading, "\n".join(current_lines).strip()))
+                current_heading = line.strip()
+                current_lines = []
+            elif line != title:
+                current_lines.append(line)
+        if current_lines:
+            sections.append((current_heading, "\n".join(current_lines).strip()))
+
+        previous_tail = ""
+        index = 0
+        for heading, body in sections:
+            if not body:
+                continue
+
+            prefix = f"{title}\n\n" if title and heading != title else ""
+            section_prefix = f"{prefix}{heading}\n\n"
+            available = chunk_size - len(section_prefix)
+            if available <= 0:
+                raise ValueError("chunk_size is too small for the document headings")
+            content_limit = available - overlap - 2
+            if content_limit <= 0:
+                raise ValueError("chunk_size is too small for the configured overlap")
+
+            paragraphs = [paragraph.strip() for paragraph in body.split("\n\n") if paragraph.strip()]
+            pieces: list[str] = []
+            current = ""
+            for paragraph in paragraphs:
+                candidate = f"{current}\n\n{paragraph}" if current else paragraph
+                if current and len(candidate) > content_limit:
+                    pieces.append(current)
+                    current = paragraph
+                else:
+                    current = candidate
+            if current:
+                pieces.append(current)
+
+            expanded: list[str] = []
+            for piece in pieces:
+                if len(piece) <= content_limit:
+                    expanded.append(piece)
+                    continue
+
+                start = 0
+                while start < len(piece):
+                    end = min(start + content_limit, len(piece))
+                    if end < len(piece):
+                        boundary = max(piece.rfind(". ", start, end), piece.rfind("; ", start, end))
+                        if boundary > start:
+                            end = boundary + 1
+                    expanded.append(piece[start:end].strip())
+                    if end >= len(piece):
+                        break
+                    start = max(end - overlap, start + 1)
+
+            for piece in expanded:
+                context = f"{previous_tail}\n\n" if previous_tail else ""
+                text = f"{section_prefix}{context}{piece}".strip()
+                chunks.append(
+                    Chunk(
+                        text=text,
+                        source=doc.source,
+                        index=index,
+                        produced_by="chunker.py::split_documents",
+                    )
+                )
+                index += 1
+                previous_tail = piece[-overlap:]
+
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:
