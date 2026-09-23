@@ -20,27 +20,16 @@
 # Unit 1
 
 ## What This Does
+This RAG (retrieval-augmented generation) program allows users to ask travel related questions and obtain answers generated from a set of 14 documents written about 9 cities. The system uses chunking to process information, and relevance cutoff gate to stop processing information not considered in the documents provided.  
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** 700
+**Overlap:** 80
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+The chunk size is 700 and the overlap is 80 because sections for the city_guides corpus are divided cleanly by markdown headers, and when scanning through the 14 markdown files, the longest section is 708 characters. Setting chunk size to 700 and overlap to 80 allows for including longer paragraphs or related sections in chunks. In particular, setting overlap at 80 instead of 100 led to fewer chunks that cuts off in the middle of the sentence.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
-
-     Milestone 3. -->
 
 ## Sample Chunks
 
@@ -125,9 +114,11 @@ cards only.
      visible. Milestone 4. -->
 
 **Question:**
-
+What city has the freshest seafood?
 **Answer:**
+Halden Bay's seafood is genuinely fresh because the two harbour restaurants buy directly from boats that land in the early morning (*guide_eating.md* and *guide_halden_bay.md*).
 
+Sources retrieved: guide_eating.md, guide_halden_bay.md, guide_pellew_sands.md
 ```
 ```
 
@@ -142,9 +133,19 @@ cards only.
 
      Milestone 4. -->
 
+The relevant cut off was kept at 0.6 because the best distance range for the 5 sample in-scope question was 0.458 - 0.568. 0.6 is comfortably enough for the system to decide that the in-scope questions written questions were indeed in corpus while filtering out the out-of-scope questions.
+
 | Question | In corpus? | Best distance |
-|---|---|---|
-|  |  |  |
+| Which city has a low-effort walk along a rail line? | Yes | 0.488 |
+| In terms of pleasant weather and manageable crowds, what is the best month to visit the cities? | Yes | 0.458 |
+| What city has the freshest seafood? | Yes | 0.568|
+| Where can I find a meal at a pub at midnight on a Saturday?| Yes | 0.489 |
+| Can I hail a taxi normally off the streets in Brightwater | Yes | 0.518 |
+| What is the capital of Mongolia? | No | 0.887 |
+| How do I change the oil in a diesel engine? | No | 0.488 |
+| Who won the 1994 World Cup? | No | 0.903 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.829 |
+| How do I write a for loop in Rust?| No | 0.853 |
 
 ## How I Used AI
 
@@ -158,8 +159,10 @@ cards only.
      Milestone 5. -->
 
 **1.**
+I asked Claude to read all the markdown documents under city_guides folder and give an average of paragraph sizes in the corpus. It pointed out that sections were divided cleanly by header markdowns and gave the breakdown based on section headings, which gave me the idea to code the chunking logic based on section headings.
 
 **2.**
+The split_documents function in chunker.py was written with the help of Claude. I asked it to implement header-aware chunking while accounting for my custom chunk size and chunk overlap in the config.py file.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
