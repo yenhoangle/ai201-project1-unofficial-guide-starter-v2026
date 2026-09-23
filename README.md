@@ -28,7 +28,7 @@ This RAG (retrieval-augmented generation) program allows users to ask travel rel
 **Chunk size:** 700
 **Overlap:** 80
 
-The chunk size is 700 and the overlap is 80 because sections for the city_guides corpus are divided cleanly by markdown headers, and when scanning through the 14 markdown files, the longest section is 708 characters. Setting chunk size to 700 and overlap to 80 allows for including longer paragraphs or related sections in chunks. In particular, setting overlap at 80 instead of 100 led to fewer chunks that cuts off in the middle of the sentence.
+The chunk size is 700 and the overlap is 80 because sections for the city_guides corpus are divided cleanly by markdown headers, and when scanning through the 14 markdown files, the longest section is 708 characters. Setting chunk size to 700 and overlap to 80 allows for including longer paragraphs or related sections in chunks. In particular, setting overlap at 80 instead of 100 led to fewer chunks that cuts off in the middle of the word.
 
 
 ## Sample Chunks
