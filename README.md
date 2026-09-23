@@ -133,7 +133,7 @@ Sources retrieved: guide_eating.md, guide_halden_bay.md, guide_pellew_sands.md
 
      Milestone 4. -->
 
-The relevant cut off was kept at 0.6 because the best distance range for the 5 sample in-scope question was 0.458 - 0.568. 0.6 is comfortably enough for the system to decide that the in-scope questions written questions were indeed in corpus while filtering out the out-of-scope questions.
+The relevant cut off was kept at 0.6 because the best distance range for the 5 sample in-scope question was 0.458 - 0.568. 0.6 is comfortably enough for the system to decide that the in-scope questions written questions were indeed in corpus while filtering out the out-of-scope questions since it more than the upper bound of in-scope (0.568) and the lower bound of out-of-scope (0.829).
 
 | Question | In corpus? | Best distance |
 | Which city has a low-effort walk along a rail line? | Yes | 0.488 |
