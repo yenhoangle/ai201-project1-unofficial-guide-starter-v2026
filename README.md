@@ -20,7 +20,7 @@
 # Unit 1
 
 ## What This Does
-This RAG (retrieval-augmented generation) program allows users to ask travel related questions and obtain answers generated from a set of 14 documents written about 9 cities. The system uses chunking to process information, and relevance cutoff gate to stop processing information not considered in the documents provided.  
+This RAG (retrieval-augmented generation) program allows users to ask travel related questions and obtain answers generated from a set of 14 documents written about 9 cities. The system uses chunking to process information and relevance cutoff gate to stop processing information not considered in the documents provided.  
 
 
 ## Chunking Strategy
@@ -28,7 +28,7 @@ This RAG (retrieval-augmented generation) program allows users to ask travel rel
 **Chunk size:** 700
 **Overlap:** 80
 
-The chunk size is 700 and the overlap is 80 because sections for the city_guides corpus are divided cleanly by markdown headers, and when scanning through the 14 markdown files, the longest section is 708 characters. Setting chunk size to 700 and overlap to 80 allows for including longer paragraphs or related sections in chunks. In particular, setting overlap at 80 instead of 100 led to fewer chunks that cuts off in the middle of the word.
+The chunk size is 700 and the overlap is 80 because sections for the city_guides corpus are divided cleanly by markdown headers, and when scanning through the 14 markdown files, the longest section is 708 characters. Setting chunk size to 700 and overlap to 80 allows for including longer paragraphs or related sections in chunks. In particular, setting overlap at 80 instead of 100 led to fewer chunks that cut off in the middle of the word.
 
 
 ## Sample Chunks
@@ -134,7 +134,7 @@ Sources retrieved: guide_eating.md, guide_halden_bay.md, guide_pellew_sands.md
 
      Milestone 4. -->
 
-The relevant cut off was kept at 0.6 because the best distance range for the 5 sample in-scope question was 0.458 - 0.568. 0.6 is comfortably enough for the system to decide that the in-scope questions written questions were indeed in corpus while filtering out the out-of-scope questions since it more than the upper bound of in-scope (0.568) and the lower bound of out-of-scope (0.829).
+The relevant cut off was kept at 0.6 because the best distance range for the 5 sample in-scope question was 0.458 - 0.568. 0.6 is comfortably enough for the system to decide that the in-scope questions written questions were indeed in corpus while filtering out the out-of-scope questions since it more than the upper bound of in-scope (0.568) and the less than lower bound of out-of-scope (0.829).
 
 | Question | In corpus? | Best distance |
 |---|---|---|
@@ -144,7 +144,7 @@ The relevant cut off was kept at 0.6 because the best distance range for the 5 s
 | Where can I find a meal at a pub at midnight on a Saturday?| Yes | 0.489 |
 | Can I hail a taxi normally off the streets in Brightwater | Yes | 0.518 |
 | What is the capital of Mongolia? | No | 0.887 |
-| How do I change the oil in a diesel engine? | No | 0.488 |
+| How do I change the oil in a diesel engine? | No | 0.897 |
 | Who won the 1994 World Cup? | No | 0.903 |
 | What is the recommended dosage of ibuprofen for a headache? | No | 0.829 |
 | How do I write a for loop in Rust?| No | 0.853 |
