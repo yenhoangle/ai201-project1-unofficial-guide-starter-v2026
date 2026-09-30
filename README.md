@@ -338,7 +338,7 @@ in the questions so it would be ineffective in resolving my diagnosis of the fir
 | 1. Retrieved chunk contains the answer | 4 of 5 | 4 of 5 | 4 of 5  | 4 of 5 | MET |
 | 2. Every answer names a source | 5 of 5 | 5 of 5  | 5 of 5 | 5 of 5 | MET |
 | 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5  | 5 of 5 | MET |
-| 4. Chunks do not contain too many headers | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 4. Chunks do not contain too many headers | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 | 5. City names must be accurate | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 
 **Did it help?**
