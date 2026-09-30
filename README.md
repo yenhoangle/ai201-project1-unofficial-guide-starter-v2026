@@ -193,15 +193,71 @@ The split_documents function in chunker.py was written with the help of Claude. 
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 3 of 5 | 4 of 5  | 3 of 5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5 of 5  | 5 of 5 | 5 of 5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5  | 5 of 5 | MET |
+| 4. Chunks do not contain too many headers | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 5. City names must be accurate | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+### Criterion 1 - Retrieved chunk contains the answer
+#### What city has the freshest seafood? — run 1
+- Produced by `run_eval.py::main`
+- Best distance: 0.5675 (passed the gate)
+- Sources retrieved: guide_eating.md, guide_halden_bay.md, guide_pellew_sands.md
+
+```
+Halden Bay's seafood is genuinely fresh because the two harbour restaurants buy directly from boats that land in the early morning. 
+
+Source: guide_eating.md (and guide_halden_bay.md)
+```
+### Criterion 2 - Every answer names a source
+#### Which city has a low-effort walk along a rail line? — run 1
+- Produced by `run_eval.py::main`
+- Best distance: 0.4878 (passed the gate)
+- Sources retrieved: guide_accessibility.md, guide_kestrelford.md, guide_marchwood.md, guide_regional_transport.md, guide_walking.md
+
+```
+The old railway trackbed from Kestrelford is six miles on an easy gradient and provides the best walking in the region for the effort involved (guide_regional_transport.md and guide_walking.md).
+```
+### Criterion 3 - Gate stops out-of-corpus questions
+Produced by `run_eval.py::check_out_of_scope`, cutoff 0.6. Refused 5 of 5.
+
+Retrieval is deterministic and the gate is a comparison against a
+fixed number, so these do not vary between runs — one pass over the
+list is the whole measurement.
+
+| Out-of-scope question | Best distance | Gate |
+|---|---|---|
+| What is the capital of Mongolia? | 0.887 | refused |
+| How do I change the oil in a diesel engine? | 0.897 | refused |
+| Who won the 1994 World Cup? | 0.903 | refused |
+| What is the recommended dosage of ibuprofen for a headache? | 0.829 | refused |
+| How do I write a for loop in Rust? | 0.853 | refused |
+
+### Criterion 4 - Chunks do not contain too many headers
+
+Chunk 1  |  source: guide_accessibility.md#0  |  produced by: chunker.py::split_documents
+======================================================================
+# Getting around the region with limited mobility
+
+An honest assessment rather than a promotional one. Some of these places are
+difficult and it is better to know in advance.
+
+### Criterion 5 - City names must be accurate
+#### Where can I find a meal at a pub at midnight on a Saturday? — run 1
+- Produced by `run_eval.py::main`
+- Best distance: 0.4893 (passed the gate)
+- Sources retrieved: guide_eating.md, guide_elder_ness.md, guide_kestrelford.md
+
+```
+Based on the provided documents, there is nowhere to get food outside of specific service windows, and kitchens across the region stop serving at 9pm and often earlier (guide_eating.md).
+Specifically, Kestrelford's pubs serve food between 12 and 2 and between 6 and 8:30, and outside those windows there is nowhere to eat at all (guide_kestrelford.md, guide_eating.md). Therefore, you cannot find a meal at a pub at midnight. 
+
+Sources: `guide_eating.md` and `guide_kestrelford.md`
+```
 
 ## Verdicts
 
