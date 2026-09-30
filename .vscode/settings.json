@@ -1,3 +1,22 @@
 {
-    "claudeCodeChat.permissions.yoloMode": false
+    "claudeCodeChat.permissions.yoloMode": false,
+
+    // Point the editor at the project's own venv. Without this, Pylance
+    // resolves imports against whatever Python is on PATH, and every
+    // third-party import in the project shows as "could not be resolved"
+    // even though `python app.py` runs fine.
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+
+    // The project is a flat package-less layout — modules import each other by
+    // bare name (`import config`, `from store import search`), so the
+    // workspace root has to be on the analysis path.
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "python.analysis.autoSearchPaths": true,
+
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }

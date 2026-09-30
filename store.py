@@ -61,7 +61,12 @@ class _OnnxEmbedder:
     """
 
     def __init__(self):
-        from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+        # Chroma builds this name at runtime — its embedding_functions package
+        # walks its own submodules and injects the classes into globals(), so
+        # there is no import statement for an editor to find and it gets
+        # reported as missing. It isn't. Chroma suppresses the same error in
+        # their own __init__.py, one function below where this comes from.
+        from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2  # type: ignore
 
         self._ef = ONNXMiniLM_L6_V2()
 
@@ -79,7 +84,10 @@ def _sentence_transformer(name: str):
     default install has — which is the whole point of the default install.
     """
     try:
-        from sentence_transformers import SentenceTransformer
+        # Optional install, on purpose — see requirements.txt. The editor
+        # flagging this as unresolved is correct and expected; the ImportError
+        # below is the handling.
+        from sentence_transformers import SentenceTransformer  # type: ignore[import-not-found]
     except ImportError as exc:
         raise RuntimeError(
             f"config.EMBEDDING_MODEL is set to {name!r}, which isn't the model "
