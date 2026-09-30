@@ -302,6 +302,7 @@ The first criteria failed due questions question phrasing. I assumed that the sy
 
 ## The Improvement
 In `questions.py` I made some changes:
+
 Before: 
 ```
     {"question": "Which city has a low-effort walk along a rail line?", "expects": "Kestrelford"},
@@ -321,6 +322,7 @@ After:
 
 **What I changed:**
 I changed the phrasing for the questions to match the keywords mentioned in the documents. 
+
 **Why I picked it:**
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
